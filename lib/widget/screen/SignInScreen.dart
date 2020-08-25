@@ -3,8 +3,6 @@ import 'package:flutter_firebase_app/viewModel/SignInScreenViewModel.dart';
 import 'package:flutter_firebase_app/widget/component/PrimaryButton.dart';
 import 'package:provider/provider.dart';
 
-import 'SignUpScreen.dart';
-
 
 class SignInScreen extends StatefulWidget {
   SignInScreen({Key key}) : super(key: key);

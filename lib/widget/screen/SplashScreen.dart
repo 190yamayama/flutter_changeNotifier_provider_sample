@@ -3,10 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_firebase_app/viewModel/SplashScreenViewModel.dart';
 
-import 'HomeScreen.dart';
-import 'SignInScreen.dart';
-import 'SignUpScreen.dart';
-
 
 class SplashScreen extends StatefulWidget {
   SplashScreen({Key key}) : super(key: key);

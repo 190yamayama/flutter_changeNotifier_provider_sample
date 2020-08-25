@@ -2,10 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_firebase_app/viewModel/HomeScreenViewModel.dart';
 import 'package:provider/provider.dart';
 
-import 'SplashScreen.dart';
 
-
-// ignore: must_be_immutable
 class HomeScreen extends StatefulWidget with RouteAware {
   HomeScreen({Key key}) : super(key: key);
 
