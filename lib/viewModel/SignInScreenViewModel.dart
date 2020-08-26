@@ -8,44 +8,48 @@ import 'package:progress_dialog/progress_dialog.dart';
 
 class SignInScreenViewModel with ChangeNotifier {
 
-  Authentication authentication;
-  AuthenticationRepository repository = AuthenticationRepository();
+  Authentication _authentication;
+  final _repository = AuthenticationRepository();
 
-  String email = "";
-  String password = "";
+  String _email = "";
+  String _password = "";
 
   SignInScreenViewModel() {
-    this.email = "";
-    this.password = "";
+    _email = "";
+    _password = "";
   }
 
   bool isEmpty() {
-    if (email.isEmpty || password.isEmpty) {
+    if (_email.isEmpty || _password.isEmpty) {
       return true;
     }
     return false;
   }
 
   void setEmail(String val) {
-    email = val;
+    _email = val;
     notifyListeners();
   }
 
   void setPassword(String val) {
-    password = val;
+    _password = val;
     notifyListeners();
+  }
+
+  String errorMessage() {
+    return _authentication?.errorMessage ?? "";
   }
 
   void signIn(BuildContext context) {
     final ProgressDialog progress = new ProgressDialog(context);
     progress.show();
-    repository.signIn(email, password)
+    _repository.signIn(_email, _password)
         .then((value) {
           progress.hide();
-          this.authentication = value;
+          _authentication = value;
           notifyListeners();
-          if (this.authentication.authStatus == AuthStatus.signedIn) {
-            moveHomeScreen(context);
+          if (_authentication.authStatus == AuthStatus.signedIn) {
+            _moveHomeScreen(context);
           }
         });
   }
@@ -57,7 +61,7 @@ class SignInScreenViewModel with ChangeNotifier {
     );
   }
 
-  void moveHomeScreen(BuildContext context) {
+  void _moveHomeScreen(BuildContext context) {
     Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (BuildContext context) => HomeScreen())

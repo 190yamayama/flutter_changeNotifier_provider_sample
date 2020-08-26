@@ -138,7 +138,7 @@ class SignUpScreenPage extends StatelessWidget {
       //height: 80.0,
       padding: const EdgeInsets.all(32.0),
       child: new Text(
-          context.select((SignUpScreenViewModel viewModel) => viewModel.authentication?.errorMessage ?? ""),
+          context.select((SignUpScreenViewModel viewModel) => viewModel.errorMessage()),
           key: new Key("hint"),
           style: new TextStyle(fontSize: 18.0, color: Colors.grey),
           textAlign: TextAlign.center

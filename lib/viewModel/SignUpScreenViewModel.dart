@@ -7,36 +7,40 @@ import 'package:progress_dialog/progress_dialog.dart';
 
 class SignUpScreenViewModel with ChangeNotifier {
 
-  Authentication authentication;
-  AuthenticationRepository repository = AuthenticationRepository();
+  Authentication _authentication;
+  final _repository = AuthenticationRepository();
 
-  String displayName;
-  String email;
-  String password;
+  String _displayName;
+  String _email;
+  String _password;
 
   SignUpScreenViewModel() {
-    this.displayName = "";
-    this.email = "";
-    this.password = "";
+    _displayName = "";
+    _email = "";
+    _password = "";
   }
 
   void setDisplayName(String val) {
-    displayName = val;
+    _displayName = val;
     notifyListeners();
   }
 
   void setEmail(String val) {
-    email = val;
+    _email = val;
     notifyListeners();
   }
 
   void setPassword(String val) {
-    password = val;
+    _password = val;
     notifyListeners();
   }
 
+  String errorMessage() {
+    return _authentication?.errorMessage ?? "";
+  }
+
   bool isEmpty() {
-    if (displayName.isEmpty || email.isEmpty || password.isEmpty) {
+    if (_displayName.isEmpty || _email.isEmpty || _password.isEmpty) {
       return true;
     }
     return false;
@@ -45,13 +49,13 @@ class SignUpScreenViewModel with ChangeNotifier {
   void signIn(BuildContext context) {
     final ProgressDialog progress = new ProgressDialog(context);
     progress.show();
-    repository.signUp(displayName, email, password)
+    _repository.signUp(_displayName, _email, _password)
         .then((value) {
           progress.hide();
-          this.authentication = value;
+          _authentication = value;
           notifyListeners();
-          if (this.authentication.authStatus == AuthStatus.signedIn) {
-            moveHomeScreen(context);
+          if (_authentication.authStatus == AuthStatus.signedIn) {
+            _moveHomeScreen(context);
           }
         });
   }
@@ -60,7 +64,7 @@ class SignUpScreenViewModel with ChangeNotifier {
     Navigator.pop(context);
   }
 
-  void moveHomeScreen(BuildContext context) {
+  void _moveHomeScreen(BuildContext context) {
     Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (BuildContext context) => HomeScreen())

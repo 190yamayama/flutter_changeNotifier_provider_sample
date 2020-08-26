@@ -7,18 +7,18 @@ import 'package:progress_dialog/progress_dialog.dart';
 
 class HomeScreenViewModel with ChangeNotifier {
 
-  Authentication authentication;
-  AuthenticationRepository repository = AuthenticationRepository();
+  Authentication _authentication;
+  final _repository = AuthenticationRepository();
 
   String displayText() {
-    String displayName = authentication?.firebaseUser?.displayName ?? "";
+    String displayName = _authentication?.firebaseUser?.displayName ?? "";
     return "$displayName さん　ホームですよ〜";
   }
 
   void readAuthStatus() {
-    repository.checkAuthenticationStatus()
+    _repository.checkAuthenticationStatus()
         .then((value) {
-          this.authentication = value;
+          _authentication = value;
           notifyListeners();
         });
   }
@@ -26,17 +26,17 @@ class HomeScreenViewModel with ChangeNotifier {
   void signOut(BuildContext context) {
     final ProgressDialog progress = new ProgressDialog(context);
     progress.show();
-    repository.signOut()
+    _repository.signOut()
         .then((value) {
           progress.hide();
-          this.authentication = value;
-          if (this.authentication.authStatus == AuthStatus.notSignedIn) {
-            moveSplashScreen(context);
+          _authentication = value;
+          if (_authentication.authStatus == AuthStatus.notSignedIn) {
+            _moveSplashScreen(context);
           }
         });
   }
 
-  void moveSplashScreen(BuildContext context) {
+  void _moveSplashScreen(BuildContext context) {
     // 先に戻っておかないとなぜかpushReplacementがpushの動きをする
     Navigator.of(context).popUntil((route) => route.isFirst);
     Navigator.pushReplacement(

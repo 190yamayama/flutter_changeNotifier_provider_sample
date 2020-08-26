@@ -10,16 +10,16 @@ import 'package:flutter_firebase_app/widget/screen/SignUpScreen.dart';
 
 class SplashScreenViewModel {
 
-  Authentication authentication;
-  AuthenticationRepository repository = AuthenticationRepository();
+  Authentication _authentication;
+  AuthenticationRepository _repository = AuthenticationRepository();
 
   void moveNextScreen(BuildContext context) {
-    repository.checkAuthenticationStatus()
+    _repository.checkAuthenticationStatus()
         .then((value) {
-          this.authentication = value;
+          _authentication = value;
           Timer(Duration(seconds: 2), () {
             // （backで戻れないように）置き換えて遷移する
-            switch (this.authentication.authStatus) {
+            switch (_authentication.authStatus) {
               case AuthStatus.notSignedIn:
                 Navigator.pushReplacement(
                     context,
