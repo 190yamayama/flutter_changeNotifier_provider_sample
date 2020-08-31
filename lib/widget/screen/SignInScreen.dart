@@ -27,20 +27,11 @@ class _SignInScreenState extends State<SignInScreen> {
 
 class SignInScreenPage extends StatelessWidget {
 
-  bool validateAndSave() {
-    final form = SignInScreen.formKey.currentState;
-    if (form.validate()) {
-      form.save();
-      return true;
-    }
-    return false;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Login Screen"),
+        title: Text("Sign In Screen"),
       ),
       body: new Center(
         child: new SingleChildScrollView(
@@ -114,7 +105,10 @@ class SignInScreenPage extends StatelessWidget {
         text: "サインイン",
         height: 44.0,
         onPressed: () {
-          if (!validateAndSave() || context.read<SignInScreenViewModel>().isEmpty()) {
+          if (!context.read<SignInScreenViewModel>().validateAndSave()) {
+            return;
+          }
+          if (context.read<SignInScreenViewModel>().isEmpty()) {
             return;
           }
           context.read<SignInScreenViewModel>().signIn(context);

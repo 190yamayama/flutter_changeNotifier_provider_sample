@@ -24,7 +24,7 @@ class HomeScreenViewModel with ChangeNotifier {
   }
 
   void signOut(BuildContext context) {
-    final ProgressDialog progress = new ProgressDialog(context);
+    final progress = new ProgressDialog(context);
     progress.show();
     _repository.signOut()
         .then((value) {

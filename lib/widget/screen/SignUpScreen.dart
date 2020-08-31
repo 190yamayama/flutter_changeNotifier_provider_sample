@@ -26,15 +26,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
 class SignUpScreenPage extends StatelessWidget {
 
-  bool validateAndSave() {
-    final form = SignUpScreen.formKey.currentState;
-    if (form.validate()) {
-      form.save();
-      return true;
-    }
-    return false;
-  }
-
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -113,7 +104,10 @@ class SignUpScreenPage extends StatelessWidget {
         text: "サインアップ",
         height: 44.0,
         onPressed: () {
-          if (!validateAndSave() || context.read<SignUpScreenViewModel>().isEmpty()) {
+          if (!context.read<SignUpScreenViewModel>().validateAndSave()) {
+            return;
+          }
+          if (context.read<SignUpScreenViewModel>().isEmpty()) {
             return;
           }
           context.read<SignUpScreenViewModel>().signIn(context);

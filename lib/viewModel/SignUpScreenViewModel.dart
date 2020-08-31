@@ -3,6 +3,7 @@ import 'package:flutter_firebase_app/model/AuthStatus.dart';
 import 'package:flutter_firebase_app/model/Authentication.dart';
 import 'package:flutter_firebase_app/repository/AuthenticationRepository.dart';
 import 'package:flutter_firebase_app/widget/screen/HomeScreen.dart';
+import 'package:flutter_firebase_app/widget/screen/SignUpScreen.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 
 class SignUpScreenViewModel with ChangeNotifier {
@@ -22,17 +23,14 @@ class SignUpScreenViewModel with ChangeNotifier {
 
   void setDisplayName(String val) {
     _displayName = val;
-    notifyListeners();
   }
 
   void setEmail(String val) {
     _email = val;
-    notifyListeners();
   }
 
   void setPassword(String val) {
     _password = val;
-    notifyListeners();
   }
 
   String errorMessage() {
@@ -46,8 +44,17 @@ class SignUpScreenViewModel with ChangeNotifier {
     return false;
   }
 
+  bool validateAndSave() {
+    final form = SignUpScreen.formKey.currentState;
+    if (form.validate()) {
+      form.save();
+      return true;
+    }
+    return false;
+  }
+
   void signIn(BuildContext context) {
-    final ProgressDialog progress = new ProgressDialog(context);
+    final progress = new ProgressDialog(context);
     progress.show();
     _repository.signUp(_displayName, _email, _password)
         .then((value) {

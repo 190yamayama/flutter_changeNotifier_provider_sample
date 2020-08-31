@@ -3,6 +3,7 @@ import 'package:flutter_firebase_app/model/AuthStatus.dart';
 import 'package:flutter_firebase_app/model/Authentication.dart';
 import 'package:flutter_firebase_app/repository/AuthenticationRepository.dart';
 import 'package:flutter_firebase_app/widget/screen/HomeScreen.dart';
+import 'package:flutter_firebase_app/widget/screen/SignInScreen.dart';
 import 'package:flutter_firebase_app/widget/screen/SignUpScreen.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 
@@ -26,14 +27,21 @@ class SignInScreenViewModel with ChangeNotifier {
     return false;
   }
 
+  bool validateAndSave() {
+    final form = SignInScreen.formKey.currentState;
+    if (form.validate()) {
+      form.save();
+      return true;
+    }
+    return false;
+  }
+
   void setEmail(String val) {
     _email = val;
-    notifyListeners();
   }
 
   void setPassword(String val) {
     _password = val;
-    notifyListeners();
   }
 
   String errorMessage() {
@@ -41,7 +49,7 @@ class SignInScreenViewModel with ChangeNotifier {
   }
 
   void signIn(BuildContext context) {
-    final ProgressDialog progress = new ProgressDialog(context);
+    final progress = new ProgressDialog(context);
     progress.show();
     _repository.signIn(_email, _password)
         .then((value) {
