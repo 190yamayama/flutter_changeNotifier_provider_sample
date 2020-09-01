@@ -13,6 +13,10 @@ class SplashScreenViewModel {
   Authentication _authentication;
   AuthenticationRepository _repository = AuthenticationRepository();
 
+  SplashScreenViewModel([AuthenticationRepository repository]) {
+    _repository = repository ?? AuthenticationRepository();
+  }
+
   void moveNextScreen(BuildContext context) {
     _repository.checkAuthenticationStatus()
         .then((value) {

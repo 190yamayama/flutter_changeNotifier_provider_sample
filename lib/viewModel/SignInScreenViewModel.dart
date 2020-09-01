@@ -7,17 +7,30 @@ import 'package:flutter_firebase_app/widget/screen/SignInScreen.dart';
 import 'package:flutter_firebase_app/widget/screen/SignUpScreen.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 
-class SignInScreenViewModel with ChangeNotifier {
+class SignInScreenViewModel extends ChangeNotifier {
 
   Authentication _authentication;
-  final _repository = AuthenticationRepository();
+  AuthenticationRepository _repository;
 
   String _email = "";
   String _password = "";
 
-  SignInScreenViewModel() {
+  SignInScreenViewModel([AuthenticationRepository repository]) {
+    _repository = repository ?? AuthenticationRepository();
     _email = "";
     _password = "";
+  }
+
+  void setEmail(String val) {
+    _email = val;
+  }
+
+  void setPassword(String val) {
+    _password = val;
+  }
+
+  String errorMessage() {
+    return _authentication?.errorMessage ?? "";
   }
 
   bool isEmpty() {
@@ -34,18 +47,6 @@ class SignInScreenViewModel with ChangeNotifier {
       return true;
     }
     return false;
-  }
-
-  void setEmail(String val) {
-    _email = val;
-  }
-
-  void setPassword(String val) {
-    _password = val;
-  }
-
-  String errorMessage() {
-    return _authentication?.errorMessage ?? "";
   }
 
   void signIn(BuildContext context) {

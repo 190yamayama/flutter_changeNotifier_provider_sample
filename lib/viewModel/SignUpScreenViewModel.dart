@@ -9,13 +9,14 @@ import 'package:progress_dialog/progress_dialog.dart';
 class SignUpScreenViewModel with ChangeNotifier {
 
   Authentication _authentication;
-  final _repository = AuthenticationRepository();
+  AuthenticationRepository _repository;
 
   String _displayName;
   String _email;
   String _password;
 
-  SignUpScreenViewModel() {
+  SignUpScreenViewModel([AuthenticationRepository repository]) {
+    _repository = repository ?? AuthenticationRepository();
     _displayName = "";
     _email = "";
     _password = "";

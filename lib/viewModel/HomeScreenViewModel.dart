@@ -8,9 +8,13 @@ import 'package:progress_dialog/progress_dialog.dart';
 class HomeScreenViewModel with ChangeNotifier {
 
   Authentication _authentication;
-  final _repository = AuthenticationRepository();
+  AuthenticationRepository _repository;
 
-  String displayText() {
+  HomeScreenViewModel([AuthenticationRepository repository]) {
+    _repository = repository ?? AuthenticationRepository();
+  }
+
+  get displayText {
     String displayName = _authentication?.firebaseUser?.displayName ?? "";
     return "$displayName さん　ホームですよ〜";
   }
