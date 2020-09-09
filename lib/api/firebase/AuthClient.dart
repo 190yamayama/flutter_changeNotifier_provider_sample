@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_firebase_app/api/model/StoreNode.dart';
 import 'package:flutter_firebase_app/util/Util.dart';
 
 abstract class BaseAuth {
@@ -34,7 +35,7 @@ class AuthClient implements BaseAuth {
     String token = await _firebaseMessaging.getToken();
 
     // Usersテーブル更新
-    await _db.collection("users/" + authResult.user.uid).add({
+    await _db.collection(StoreNode.users.node).doc(authResult.user.uid).set({
       "deviceToken": token,
       "signInAt": _util.getNowDateAndTime()
     });
@@ -54,7 +55,7 @@ class AuthClient implements BaseAuth {
     String _token = await _firebaseMessaging.getToken();
 
     // Usersテーブル作成
-    await _db.collection("users").doc(authResult.user.uid).set({
+    await _db.collection(StoreNode.users.node).doc(authResult.user.uid).set({
       "deviceToken": _token,
       "displayName": displayName,
       "createdAt": _util.getNowDateAndTime(),
@@ -73,7 +74,7 @@ class AuthClient implements BaseAuth {
     String _token = await _firebaseMessaging.getToken();
 
     // Usersテーブル作成
-    await _db.collection("users").doc(authResult.user.uid).set({
+    await _db.collection(StoreNode.users.node).doc(authResult.user.uid).set({
       "deviceToken": _token,
       "displayName": displayName,
       "updatedAt": _util.getNowDateAndTime()
