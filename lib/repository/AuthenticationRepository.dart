@@ -1,21 +1,21 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_firebase_app/api/firebase/Auth.dart';
-import 'package:flutter_firebase_app/model/AuthStatus.dart';
-import 'package:flutter_firebase_app/model/Authentication.dart';
+import 'package:flutter_firebase_app/api/firebase/AuthClient.dart';
+import 'package:flutter_firebase_app/api/model/AuthStatus.dart';
+import 'package:flutter_firebase_app/api/model/Authentication.dart';
 
 class AuthenticationRepository {
 
-  final BaseAuth _auth = new Auth();
+  final BaseAuth _auth = new AuthClient();
   String _errorCode = "";
   String _errorMessage = "";
 
   Future<Authentication> checkAuthenticationStatus() async {
     try {
-      FirebaseUser user = await _auth.currentUser();
+      User user = await _auth.currentUser();
       AuthStatus status = user != null ? AuthStatus.signedIn : AuthStatus.notSignedIn;
       return new Authentication(status, user, _errorCode, _errorMessage, null);
-    } on PlatformException catch(e) {
+    } on FirebaseAuthException catch(e) {
       _errorCode = e.code.toString();
       _errorMessage = "";
       return new Authentication(AuthStatus.failed, null, _errorCode, _errorMessage, e);
@@ -32,16 +32,16 @@ class AuthenticationRepository {
     _errorMessage = "";
     try {
       await _auth.signIn(email, password);
-      FirebaseUser user = await _auth.currentUser();
+      User user = await _auth.currentUser();
       return new Authentication(AuthStatus.signedIn, user, "", "", null);
-    } on PlatformException catch(e) {
+    } on FirebaseAuthException catch(e) {
       _errorCode = e.code.toString();
       _errorMessage = "";
       switch(_errorCode) {
-        case "ERROR_USER_NOT_FOUND":
+        case "user-not-found":
           _errorMessage = "ユーザが存在しません\nサインアップしてください";
           break;
-        case "ERROR_WRONG_PASSWORD":
+        case "wrong-password":
           _errorMessage = "パスワードが間違っています";
           break;
         default:
@@ -61,13 +61,13 @@ class AuthenticationRepository {
     _errorMessage = "";
     try {
       await _auth.createUser(displayName, email, password);
-      FirebaseUser user = await _auth.currentUser();
+      User user = await _auth.currentUser();
       return new Authentication(AuthStatus.signedIn, user, "", "", null);
-    } on PlatformException catch(e) {
+    } on FirebaseAuthException catch(e) {
       _errorCode = e.code.toString();
       _errorMessage = "";
       switch(_errorCode) {
-        case "ERROR_EMAIL_ALREADY_IN_USE":
+        case "email-already-in-use":
           _errorMessage = "既にユーザが存在します\nサインインしてください";
           break;
         default:
@@ -88,7 +88,7 @@ class AuthenticationRepository {
     try {
       await _auth.signOut();
       return new Authentication(AuthStatus.notSignedIn, null, "", "", null);
-    } on PlatformException catch(e) {
+    } on FirebaseAuthException catch(e) {
       _errorCode = e.code.toString();
       _errorMessage = '';
       return new Authentication(AuthStatus.failed, null, _errorCode, _errorMessage, e);

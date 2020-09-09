@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_firebase_app/model/AuthStatus.dart';
-import 'package:flutter_firebase_app/model/Authentication.dart';
+import 'package:flutter_firebase_app/api/model/AuthStatus.dart';
+import 'package:flutter_firebase_app/api/model/Authentication.dart';
 import 'package:flutter_firebase_app/repository/AuthenticationRepository.dart';
 import 'package:flutter_firebase_app/widget/screen/SplashScreen.dart';
 import 'package:progress_dialog/progress_dialog.dart';

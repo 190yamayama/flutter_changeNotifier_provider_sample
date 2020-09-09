@@ -4,7 +4,7 @@ import 'AuthStatus.dart';
 
 class Authentication {
   final AuthStatus authStatus;
-  final FirebaseUser firebaseUser;
+  final User firebaseUser;
   final String errorCode;
   final String errorMessage;
   final Exception e;

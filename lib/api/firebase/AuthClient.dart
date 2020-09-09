@@ -9,30 +9,32 @@ abstract class BaseAuth {
   Future<void> signOut();
   Future<String> createUser(String displayName, String email, String password);
   Future<String> updateUser(String displayName, String email, String password);
-  Future<FirebaseUser> currentUser();
+  Future<User> currentUser();
 }
 
-class Auth implements BaseAuth {
+class AuthClient implements BaseAuth {
 
   final FirebaseAuth _firebaseAuth;
   final FirebaseMessaging _firebaseMessaging;
-  final BaseUtil _util = new Util();
+  final BaseUtil _util;
+  final FirebaseFirestore _db;
 
-  Auth({FirebaseAuth firebaseAuth, FirebaseMessaging firebaseMessaging})
+  AuthClient({FirebaseAuth firebaseAuth, FirebaseMessaging firebaseMessaging, FirebaseFirestore db, BaseUtil util})
       : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
-        _firebaseMessaging = firebaseMessaging ?? new FirebaseMessaging()
+        _firebaseMessaging = firebaseMessaging ?? new FirebaseMessaging(),
+        _db = db ?? FirebaseFirestore.instance,
+        _util = util ?? new Util()
   ;
 
   Future<String> signIn(String email, String password) async {
 
-    AuthResult authResult = await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
+    UserCredential authResult = await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
 
     // deviceToken取得
     String token = await _firebaseMessaging.getToken();
 
     // Usersテーブル更新
-    var db = Firestore.instance;
-    await db.collection("users").document(authResult.user.uid).setData({
+    await _db.collection("users/" + authResult.user.uid).add({
       "deviceToken": token,
       "signInAt": _util.getNowDateAndTime()
     });
@@ -46,19 +48,13 @@ class Auth implements BaseAuth {
 
   Future<String> createUser(String displayName, String email, String password) async {
 
-    AuthResult authResult = await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
-
-    // Firebase UserInfo 更新
-    UserUpdateInfo info = new UserUpdateInfo();
-    info.displayName = displayName; // 表示名前
-    authResult.user.updateProfile(info);
+    UserCredential authResult = await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
 
     // deviceToken取得
     String _token = await _firebaseMessaging.getToken();
 
     // Usersテーブル作成
-    var db = Firestore.instance;
-    await db.collection("users").document(authResult.user.uid).setData({
+    await _db.collection("users").doc(authResult.user.uid).set({
       "deviceToken": _token,
       "displayName": displayName,
       "createdAt": _util.getNowDateAndTime(),
@@ -71,19 +67,13 @@ class Auth implements BaseAuth {
 
   Future<String> updateUser(String displayName, String email, String password) async {
 
-    AuthResult authResult = await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
-
-    // Firebase UserInfo 更新
-    UserUpdateInfo info = new UserUpdateInfo();
-    info.displayName = displayName; // 表示名前
-    authResult.user.updateProfile(info);
+    UserCredential authResult = await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
 
     // deviceToken取得
     String _token = await _firebaseMessaging.getToken();
 
     // Usersテーブル作成
-    var db = Firestore.instance;
-    await db.collection("users").document(authResult.user.uid).updateData({
+    await _db.collection("users").doc(authResult.user.uid).set({
       "deviceToken": _token,
       "displayName": displayName,
       "updatedAt": _util.getNowDateAndTime()
@@ -92,9 +82,8 @@ class Auth implements BaseAuth {
     return authResult.user.uid;
   }
 
-  Future<FirebaseUser> currentUser() async {
-    FirebaseUser user = await _firebaseAuth.currentUser();
-    return user;
+  Future<User> currentUser() async {
+    return _firebaseAuth.currentUser;
   }
 
 }
