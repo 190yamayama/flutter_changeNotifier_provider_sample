@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_firebase_app/api/model/AuthStatus.dart';
-import 'package:flutter_firebase_app/api/model/Authentication.dart';
+import 'package:flutter_firebase_app/api/firebase/model/AuthStatus.dart';
+import 'package:flutter_firebase_app/api/firebase/model/Authentication.dart';
 import 'package:flutter_firebase_app/repository/AuthenticationRepository.dart';
 import 'package:flutter_firebase_app/widget/screen/HomeScreen.dart';
 import 'package:flutter_firebase_app/widget/screen/SignInScreen.dart';

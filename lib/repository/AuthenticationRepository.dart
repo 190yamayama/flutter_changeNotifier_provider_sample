@@ -1,8 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_firebase_app/api/firebase/AuthClient.dart';
-import 'package:flutter_firebase_app/api/model/AuthStatus.dart';
-import 'package:flutter_firebase_app/api/model/Authentication.dart';
+import 'package:flutter_firebase_app/api/firebase/model/AuthStatus.dart';
+import 'package:flutter_firebase_app/api/firebase/model/Authentication.dart';
 
 class AuthenticationRepository {
 
